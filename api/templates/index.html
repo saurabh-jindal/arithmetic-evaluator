@@ -1,0 +1,62 @@
+<!-- arithmetic_backend/index.html -->
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Arithmetic Expression Evaluator</title>
+        <style>
+            /* Your CSS styles here */
+        </style>
+    </head>
+    <body>
+        <h1>Arithmetic Expression Evaluator</h1>
+        <form id="expression-form">
+            <input
+                type="text"
+                id="expression"
+                placeholder="Enter an arithmetic expression"
+            />
+            <button type="submit">Evaluate</button>
+        </form>
+        <div id="result"></div>
+
+        <script>
+            // Your JavaScript code here
+            // arithmetic_backend/static/js/script.js
+            document.addEventListener("DOMContentLoaded", function () {
+                document
+                    .getElementById("expression-form")
+                    .addEventListener("submit", function (event) {
+                        event.preventDefault();
+                        let expression =
+                            document.getElementById("expression").value;
+                        fetch("/evaluate/", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type":
+                                    "application/x-www-form-urlencoded",
+                            },
+                            body:
+                                "expression=" + encodeURIComponent(expression),
+                        })
+                            .then((response) => response.json())
+                            .then((data) => {
+                                if (data.result !== undefined) {
+                                    document.getElementById(
+                                        "result",
+                                    ).innerText = "Result: " + data.result;
+                                } else if (data.error !== undefined) {
+                                    document.getElementById(
+                                        "result",
+                                    ).innerText = "Error: " + data.error;
+                                }
+                            })
+                            .catch((error) => {
+                                console.error("Error:", error);
+                            });
+                    });
+            });
+        </script>
+    </body>
+</html>
